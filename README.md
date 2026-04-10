@@ -7,7 +7,7 @@ We use magnitude based features to analyze synthetic data of the tumour microenv
 
 
 ### Data
-We use outputs from an agent based model that models the tumor microenvironment by Joshua A. Bull and Helen M. Byrne [[1]](#1).Specifically, we work with simulation outputs at a single late time point, obtained under variation of two parameters $\Chi_c^m$ and $c_{1/2}$ that influence the behaviour of macrophages.
+We use outputs from an agent based model that models the tumor microenvironment by Joshua A. Bull and Helen M. Byrne [[1]](#1).Specifically, we work with simulation outputs at a single late time point, obtained under variation of two parameters $\chi_c^m$ and $c_{1/2}$ that influence the behaviour of macrophages.
 
 
 ## Code Structure
