@@ -209,7 +209,7 @@ experiments_scores = [
     {
         "active": True,  # just magnitudes - not normalised
         "scale": 0.35,
-        "numbers_signatures": list(range(2, 4)),
+        "numbers_signatures": list(range(2, 11)),
         "norm": False,
         "magnitudes": True,
         "cellcounts": False,
@@ -218,7 +218,7 @@ experiments_scores = [
     },
     {
         "active": True,  # cellcounts - not normalised
-        "numbers_signatures": list(range(2, 4)),
+        "numbers_signatures": list(range(2, 11)),
         "norm": False,
         "magnitudes": False,
         "cellcounts": True,
@@ -227,7 +227,7 @@ experiments_scores = [
     },
     {
         "active": True,  # cellcounts + distances - normalised
-        "numbers_signatures": list(range(2, 4)),
+        "numbers_signatures": list(range(2, 11)),
         "norm": True,
         "magnitudes": False,
         "cellcounts": True,
@@ -298,21 +298,21 @@ def run_experiment(
     if not os.path.exists(result_directory):
         os.makedirs(result_directory)
 
-    if os.path.exists(
-        result_directory + f"all_info_{num_signatures}signatures"
-    ) and os.path.exists(result_directory + "vectors"):
-        picklefile = open(
-            result_directory + f"all_info_{num_signatures}signatures", "rb"
+    if os.path.exists(os.path.join(
+        result_directory, f"all_info_{num_signatures}signatures"
+    )) and os.path.exists(os.path.join(result_directory, "vectors")):
+        picklefile = open(os.path.join(
+            result_directory, f"all_info_{num_signatures}signatures"), "rb"
         )
         all_info = pickle.load(picklefile)
         picklefile.close()
-        picklefile = open(result_directory + "vectors", "rb")
+        picklefile = open(os.path.join(result_directory, "vectors"), "rb")
         list_of_vectors = pickle.load(picklefile)
         picklefile.close()
 
     else:
-        if os.path.exists(result_directory + "vectors"):
-            picklefile = open(result_directory + "vectors", "rb")
+        if os.path.exists(os.path.join(result_directory, "vectors")):
+            picklefile = open(os.path.join(result_directory, "vectors"), "rb")
             list_of_vectors = pickle.load(picklefile)
             picklefile.close()
             all_info = prep_data(
@@ -336,7 +336,7 @@ def run_experiment(
             all_info["label"] = labels
 
             # store data
-            file = open(result_directory + f"all_info_{num_signatures}signatures", "wb")
+            file = open(os.path.join(result_directory, f"all_info_{num_signatures}signatures"), "wb")
             pickle.dump(all_info, file)
             file.close()
 
@@ -369,10 +369,10 @@ def run_experiment(
             all_info["label"] = labels
 
             # store data
-            file = open(result_directory + f"all_info_{num_signatures}signatures", "wb")
+            file = open(os.path.join(result_directory, f"all_info_{num_signatures}signatures"), "wb")
             pickle.dump(all_info, file)
             file.close()
-            file = open(result_directory + "vectors", "wb")
+            file = open(os.path.join(result_directory, "vectors"), "wb")
             pickle.dump(list_of_vectors, file)
             file.close()
 
@@ -454,14 +454,14 @@ def run_cluster_quality_experiment(
         os.makedirs(result_directory)
 
     # load precomputed scores
-    if os.path.exists(result_directory + "silhouette"):
-        picklefile = open(result_directory + "silhouette", "rb")
+    if os.path.exists(os.path.join(result_directory, "silhouette")):
+        picklefile = open(os.path.join(result_directory, "silhouette"), "rb")
         scores_s = pickle.load(picklefile)
         picklefile.close()
     else:
         scores_s = {}
-    if os.path.exists(result_directory + "elbow_i"):
-        picklefile = open(result_directory + "elbow_i", "rb")
+    if os.path.exists(os.path.join(result_directory, "elbow_i")):
+        picklefile = open(os.path.join(result_directory, "elbow_i"), "rb")
         inertias = pickle.load(picklefile)
         picklefile.close()
     else:
@@ -479,24 +479,24 @@ def run_cluster_quality_experiment(
             or num_signatures not in inertias.keys()
         ):
             if (
-                os.path.exists(
-                    result_directory + f"all_info_{num_signatures}signatures"
-                )
-                and os.path.exists(result_directory + "vectors")
+                os.path.exists(os.path.join(
+                    result_directory, f"all_info_{num_signatures}signatures"
+                ))
+                and os.path.exists(os.path.join(result_directory, "vectors"))
                 and num_signatures in inertias.keys()
             ):
-                picklefile = open(
-                    result_directory + f"all_info_{num_signatures}signatures", "rb"
+                picklefile = open(os.path.join(
+                    result_directory, f"all_info_{num_signatures}signatures"), "rb"
                 )
                 all_info = pickle.load(picklefile)
                 picklefile.close()
-                picklefile = open(result_directory + "vectors", "rb")
+                picklefile = open(os.path.join(result_directory, "vectors"), "rb")
                 list_of_vectors = pickle.load(picklefile)
                 picklefile.close()
 
             else:
-                if os.path.exists(result_directory + "vectors"):
-                    picklefile = open(result_directory + "vectors", "rb")
+                if os.path.exists(os.path.join(result_directory, "vectors")):
+                    picklefile = open(os.path.join(result_directory, "vectors"), "rb")
                     list_of_vectors = pickle.load(picklefile)
                     picklefile.close()
                     all_info = prep_data(
@@ -523,8 +523,8 @@ def run_cluster_quality_experiment(
                     all_info["label"] = labels
 
                     # store data
-                    file = open(
-                        result_directory + f"all_info_{num_signatures}signatures", "wb"
+                    file = open(os.path.join(
+                        result_directory, f"all_info_{num_signatures}signatures"), "wb"
                     )
                     pickle.dump(all_info, file)
                     file.close()
@@ -558,12 +558,12 @@ def run_cluster_quality_experiment(
                     all_info["label"] = labels
 
                     # store data
-                    file = open(
-                        result_directory + f"all_info_{num_signatures}signatures", "wb"
+                    file = open(os.path.join(
+                        result_directory, f"all_info_{num_signatures}signatures"), "wb"
                     )
                     pickle.dump(all_info, file)
                     file.close()
-                    file = open(result_directory + "vectors", "wb")
+                    file = open(os.path.join(result_directory, "vectors"), "wb")
                     pickle.dump(list_of_vectors, file)
                     file.close()
 
@@ -586,11 +586,11 @@ def run_cluster_quality_experiment(
 
     # update the saved scores if needed:
     if changes_s:
-        picklefile = open(result_directory + "silhouette", "wb")
+        picklefile = open(os.path.join(result_directory, "silhouette"), "wb")
         pickle.dump(scores_s, picklefile)
         picklefile.close()
     if changes_e_i:
-        picklefile = open(result_directory + "elbow_i", "wb")
+        picklefile = open(os.path.join(result_directory, "elbow_i"), "wb")
         pickle.dump(inertias, picklefile)
         picklefile.close()
 
@@ -615,7 +615,7 @@ def run_cluster_quality_experiment(
     plt.savefig(
         os.path.join(
             result_directory,
-            + "compare_scores_"
+            "compare_scores_"
             + str(numbers_signatures[0])
             + "-"
             + str(numbers_signatures[-1])
@@ -653,12 +653,11 @@ for item in tqdm([exp for exp in experiments if exp["active"]]):
         save_local_cellcounts(
             DATA_DIR, LOC_MAG_DIR, collect_files(DATA_DIR, range(1, 1621)), N
         )
-    if item["distances"]:
-        for filenr in collect_files(DATA_DIR, range(1, 1621)):
-            if not os.path.exists(
-                os.path.join(LOC_MAG_DIR, f"distances_filenr{filenr}")
-            ):
-                save_distances(DATA_DIR, LOC_MAG_DIR, [filenr])
+    if item["distances"] and not os.path.exists(
+            os.path.join(LOC_MAG_DIR, f"localAvrDistances_N={N}")
+        ):
+            save_local_average_pairwise_distances(DATA_DIR, LOC_MAG_DIR, LOC_MAG_DIR, collect_files(DATA_DIR,range(1,1621)))
+
     # run experiment
     run_experiment(
         data_directory=DATA_DIR,
@@ -696,12 +695,11 @@ for item in tqdm([exp for exp in experiments_scores if exp["active"]]):
         save_local_cellcounts(
             DATA_DIR, LOC_MAG_DIR, collect_files(DATA_DIR, range(1, 1621)), N
         )
-    if item["distances"]:
-        for filenr in collect_files(DATA_DIR, range(1, 1621)):
-            if not os.path.exists(
-                os.path.join(LOC_MAG_DIR, f"distances_filenr{filenr}")
-            ):
-                save_distances(DATA_DIR, LOC_MAG_DIR, [filenr])
+    if item["distances"] and not os.path.exists(
+            os.path.join(LOC_MAG_DIR, f"localAvrDistances_N={N}")
+        ):
+            save_local_average_pairwise_distances(DATA_DIR, LOC_MAG_DIR, LOC_MAG_DIR, collect_files(DATA_DIR,range(1,1621)))
+
     # plot for cluster assessment
     run_cluster_quality_experiment(
         data_directory=DATA_DIR,

@@ -81,28 +81,13 @@ def prep_data(
             md = read_local_magnitudes(local_magnitude_directory, scale, N)
         if cellcounts:
             cd = read_local_cellcounts(local_magnitude_directory, N)
+        if distances:
+            dd = read_local_average_pairwise_distances(local_magnitude_directory,N)
+
         # calculate all local magnitude incl.-excl. difference vectors + all combination magnitudes
         list_of_vectors = []
-        xy = generate_checkpoints(N)
-        radius = math.sqrt(2) * 25 / float(N)
-
         for k in tqdm(range(len(filenrs))):
             filenr = filenrs[k]
-
-            if distances:
-                # load distances from pickle file in preparation
-                A = read_distances(local_magnitude_directory, filenr)
-                # load data in preparation
-                data = pd.read_csv(
-                    os.path.join(
-                        data_directory, f"ID-{filenr}_time-500_From2ParamSweep_Data.csv"
-                    ),
-                    index_col=0,
-                )
-                data = data.loc[
-                    data["celltypes"].isin(["Tumour", "Macrophage", "Necrotic"])
-                ]
-                data = data.reset_index(drop=True)
 
             for l in range(N * N):
                 index = N * N * k + l
@@ -122,46 +107,10 @@ def prep_data(
                         for t in [["T"], ["M"], ["N"]]
                     ]
                 if distances:
-                    ball = give_ball(data, xy[i], xy[j], radius)
-                    tcells = list(ball.loc[ball["celltypes"] == "Tumour"].index)
-                    mcells = list(ball.loc[ball["celltypes"] == "Macrophage"].index)
-                    ncells = list(ball.loc[ball["celltypes"] == "Necrotic"].index)
-                    # tumour average
-                    vector.append(
-                        np.average(
-                            [
-                                A[tcells[a]][tcells[b]]
-                                for a in range(len(tcells) - 1)
-                                for b in range(a + 1, len(tcells))
-                            ]
-                        )
-                        if len(tcells) > 1
-                        else 0
-                    )
-                    # macrophage average
-                    vector.append(
-                        np.average(
-                            [
-                                A[mcells[a]][mcells[b]]
-                                for a in range(len(mcells) - 1)
-                                for b in range(a + 1, len(mcells))
-                            ]
-                        )
-                        if len(mcells) > 1
-                        else 0
-                    )
-                    # necrotic average
-                    vector.append(
-                        np.average(
-                            [
-                                A[ncells[a]][ncells[b]]
-                                for a in range(len(ncells) - 1)
-                                for b in range(a + 1, len(ncells))
-                            ]
-                        )
-                        if len(ncells) > 1
-                        else 0
-                    )
+                    vector = vector + [
+                        dd.loc[k, ",".join([str(i), str(j)] + t)]
+                        for t in [["T"], ["M"], ["N"]]
+                    ]
 
                 list_of_vectors.append(vector)
 

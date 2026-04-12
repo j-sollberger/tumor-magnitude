@@ -408,3 +408,155 @@ def read_distances(saved_distances_directory: str, filenr: int) -> list:
     picklefile.close()
 
     return A
+
+def save_local_average_pairwise_distances(data_directory: str, saved_distances_directory: str, saved_average_distances_directory: str, N: int, filenrs: list) -> None:
+    """Saves local average pairwise distances across all simulation outcomes to a pickle file. Here for a given number of NxN checkpoints (and minimal closed disks that cover the entire domain). The local average distances are saved to a pickle file 'localAvrDistances_N={N}' in the format of a pandas dataframe, with rows corresponding to simulation outcomes, and columns labeled in the format of '1,2,M,N' – with a single listed cell type corresponding to pairwise distances within this cell type, and a pair of two cell types corresponding to pairwise distances between these two cell types.
+
+    Args:
+        data_directory (str): where the data (simulation outcomes) is stored
+        saved_distances_directory (str): where all pairwise distances are stored
+        saved_average_distances_directory (str): where local average distances should be saved to
+        N (int): simulation domain is covered with NxN local neighbourhoods (disks)
+        filenrs (list): list of filenrs for whose corresponding local average distances should be saved
+    """
+
+    if not os.path.exists(os.path.join(saved_distances_directory,f"distances_filenr{filenr}")):
+        save_distances(data_directory,saved_distances_directory,filenrs)
+
+    cells = ["Tumour", "Macrophage", "Necrotic"]
+    power_set = []
+    for r in range(1, len(cells)):
+        power_set.extend(itertools.combinations(cells, r))
+
+    xy = generate_checkpoints(N)
+    radius = math.sqrt(2) * 25 / float(N)
+
+    frame = pd.DataFrame(
+        columns=[
+            ",".join([str(i), str(j)] + [item[0] for item in celltypes])
+            for i in range(len(xy))
+            for j in range(len(xy))
+            for celltypes in power_set
+        ]
+    )
+
+    for filenr in tqdm(filenrs):
+        A = read_distances(saved_distances_directory, filenr)
+        data = pd.read_csv(
+            os.path.join(
+                data_directory, f"ID-{filenr}_time-500_From2ParamSweep_Data.csv"
+            ),
+            index_col=0,
+        )
+        data = data.loc[
+            data["celltypes"].isin(["Tumour", "Macrophage", "Necrotic"])
+        ]
+        data = data.reset_index(drop=True)
+        row = []
+        for x in xy:
+            for y in xy:
+                ball = give_ball(data, x, y, radius)
+                tcells = list(ball.loc[ball["celltypes"] == "Tumour"].index)
+                mcells = list(ball.loc[ball["celltypes"] == "Macrophage"].index)
+                ncells = list(ball.loc[ball["celltypes"] == "Necrotic"].index)
+                # tumour average
+                row.append(
+                    np.average(
+                        [
+                            A[tcells[a]][tcells[b]]
+                            for a in range(len(tcells) - 1)
+                            for b in range(a + 1, len(tcells))
+                        ]
+                    )
+                    if len(tcells) > 1
+                    else 0
+                )
+                # macrophage average
+                row.append(
+                    np.average(
+                        [
+                            A[mcells[a]][mcells[b]]
+                            for a in range(len(mcells) - 1)
+                            for b in range(a + 1, len(mcells))
+                        ]
+                    )
+                    if len(mcells) > 1
+                    else 0
+                )
+                # necrotic average
+                row.append(
+                    np.average(
+                        [
+                            A[ncells[a]][ncells[b]]
+                            for a in range(len(ncells) - 1)
+                            for b in range(a + 1, len(ncells))
+                        ]
+                    )
+                    if len(ncells) > 1
+                    else 0
+                )
+                # tumour-macrophage average
+                row.append(
+                    np.average(
+                        [
+                            A[tcells[a]][mcells[b]]
+                            for a in range(len(tcells))
+                            for b in range(len(mcells))
+                        ]
+                    )
+                    if len(tcells) > 0 and len(mcells) > 0
+                    else 0
+                )
+                # tumour-necrotic average
+                row.append(
+                    np.average(
+                        [
+                            A[tcells[a]][ncells[b]]
+                            for a in range(len(tcells))
+                            for b in range(len(ncells))
+                        ]
+                    )
+                    if len(tcells) > 0 and len(ncells) > 0
+                    else 0
+                )
+                # macrophage-necrotic average
+                row.append(
+                    np.average(
+                        [
+                            A[mcells[a]][ncells[b]]
+                            for a in range(len(mcells))
+                            for b in range(len(ncells))
+                        ]
+                    )
+                    if len(mcells) > 0 and len(ncells) > 0
+                    else 0
+                )
+        frame.loc[frame.shape[0]] = row
+
+    # dump into pickle file
+    file = open(
+        os.path.join(saved_average_distances_directory, f"localAvrDistances_N={N}"), "wb"
+    )
+    pickle.dump(frame, file)
+    file.close()
+
+    return
+
+def read_local_average_pairwise_distances(saved_average_distances_directory: str, N: int) -> pd.DataFrame:
+    """Reads the saved local average pairwise distances per cell type from the corresponding pickle file with name 'localAvrDistances_N={N}'.
+
+    Args:
+        saved_average_distances_directory (str): where the pd dataframe with the local average pairwise distances is stored
+        N (int): simulation domain is covered with NxN local neighbourhoods (disks)
+
+    Returns:
+        pd.DataFrame: data frame with rows corresponding to simulation outcomes, and columns labeled in the format of '1,2,M,N' – with a single listed cell type corresponding to pairwise distances within this cell type, and a pair of two cell types corresponding to pairwise distances between these two cell types.
+    """
+
+    file = open(
+        os.path.join(saved_average_distances_directory, f"localAvrDistances_N={N}"), "rb"
+    )
+    newframe = pickle.load(file)
+    file.close()
+
+    return newframe
