@@ -7,36 +7,37 @@ We use magnitude based features to analyze synthetic data of the tumour microenv
 
 
 ### Data
-We use outputs from an agent based model that models the tumor microenvironment by Joshua A. Bull and Helen M. Byrne [[1]](#1).Specifically, we work with simulation outputs at a single late time point, obtained under variation of two parameters $\chi_c^m$ and $c_{1/2}$ that influence the behaviour of macrophages.
+We use outputs from an agent based model that models the tumor microenvironment by Joshua A. Bull and Helen M. Byrne [[1]](#1). Specifically, we work with simulation outputs at a single late time point, obtained under variation of two parameters $\chi_c^m$ and $c_{1/2}$ that influence the behaviour of macrophages.
 
 
 ## Code Structure
-- `data_preparation_precomputation.py` contains functions used to read existing file numbers in the given data, to compute magnitude, and to save and read precomputed magnitudes (both local and global) along with local cell counts and pairwise distances.
+- `data_preparation_precomputation.py` contains functions used to read existing file numbers in the given data, to compute magnitude, and to save and read precomputed magnitudes (both local and global) along with local cell counts and (local average) pairwise distances.
 - `matplotlib_config.py`contains color palettes and shared configurations for plots.
 
 
 ### Local
-- `local_utils.py` contains alone functions used in the local application.
-- `local_run_and_plot.py` runs the local experiments specified at the top. That is, it clusters local neighbourhoods across all simulation outcomes into the specified number of local signatures, using the specified features, and it plots the results in the specified ways. It further runs experiments to analyse cluster quality depending on the number of clusters and the used features.
+- `local_utils.py` contains alone functions used in the local application. In particular, `prep_data` computes the desired feature vectors (depending on the specified method), and the remaining functions plot results.
+- `local_run_and_plot.py` runs the local experiments specified at the top. That is, it clusters local neighbourhoods across all simulation outcomes into the specified number of local signatures, using the specified features, and it plots the results in the specified ways (using `run_experiment`). It further runs experiments to analyse cluster quality depending on the number of clusters and the used features (using `run_cluster_quality_experiment`).
 - `local_extras.py` contains extra code connected to the local application that is not used to produce results relevant for the above preprint but that could be useful for further work.
 
 
 ### Global
-- `global_utils.py` contains alone functions used in the global application.
-- `global_run_and_plot.py` runs the global experiments specified at the top. That is, it classifies parameter schemes into three long term tumour outcomes, using the specified magnitude features, and it plots the resulting classification together with purities.
+- `global_utils.py` contains alone functions used in the global application. In particular, `give_vector_all_comb_magnitudes` and `give_vector_magnitude_differences` are used to compute feature vectors, `align_labels`, `return_classification` and `classify_schemes` are used to classify parameter schemes and align the labels with a given ground truth, and the remaining functions are used for plotting results.
+- `global_run_and_plot.py` runs the global experiments specified at the top. That is, using its function `run_experiment`, it classifies parameter schemes into three long term tumour outcomes, using the specified magnitude features, and it plots the resulting classification together with purities.
 - `global_extras.py` contains extra code connected to the global application that is not used to produce results relevant for the above preprint but that could be useful for further work.
 
 
 ## Reproduction of Results
-To reproduce results from the above preprint, proceed as follows:
+To reproduce results from the above preprint, use Python 3.12.2 and proceed as follows:
 - `requirements.txt` contains all necessary Python libraries and can be installed using:
 ```
 pip install -r requirements.txt
 ```
-- Download the data in the folder `Data > 17082022_all2Params_t500`. If you wish to avoid lengthy computations, make sure to also download the precomputed global magnitudes in the folder `Data > savedMagnitudes`, and the precomputed local magnitudes, local cellcounts and pairwise distances in the folder `Data > savedLocalMagnitudes`.
+- Download the data TODO WHERE. If you wish to avoid lengthy computations, make sure to also download the precomputed global magnitudes TODO WHERE, and the precomputed local magnitudes, local cellcounts and pairwise distances TODO WHERE.
 - Make sure the relative data directories at the top of `local_run_and_plot.py` and `global_run_and_plot` are correct (DATA_DIR for the data, and LOC_MAG_DIR or MAG_DIR for local or global precomputed magnitudes) and set the directory for results as you wish (RESULT_DIR).
 - Run `local_run_and_plot.py` to reproduce all local results, and run `global_run_and_plot.py` to reproduce all global results.
 
 
 # References
-<a id="1">[1]</a> Bull JA, Byrne HM (2023) Quantification of spatial and phenotypic heterogeneity in an agent-based model of tumour-macrophage interactions. PLoS Comput Biol 19(3): e1010994. https://doi.org/10.1371/journal.pcbi.1010994
+<a id="1">[1]</a> J. Bull and H. Byrne, _Quantification of spatial and phenotypic heterogeneity in an agent-based model of tumour-macrophage interactions_, PLOS Computational Biology, 3 (2023),
+p. e1010994. https://doi.org/10.1371/journal.pcbi.1010994
