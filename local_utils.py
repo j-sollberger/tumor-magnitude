@@ -152,6 +152,7 @@ def plot_across_schemes_prep(info_frame: pd.DataFrame, seed: int) -> list:
     Returns:
         list: contains one filenr for each parameter scheme, in the form [[(chi=4.5,c12=0.1),...,(chi=4.5,c12=0.9)],...,[(chi=0.5,c12=0.1),...,(chi=0.5,c12=0.9)]]
     """
+    random.seed(seed)
     display_filenrs = []
     for chi in [i / 2 for i in range(1, 10)]:
         sublist = []
@@ -160,7 +161,6 @@ def plot_across_schemes_prep(info_frame: pd.DataFrame, seed: int) -> list:
             subframe = subframe.loc[subframe["c12"] == c12]
             subframe = subframe.reset_index(drop=True)
             bin_count = len(set(subframe["filenr"]))
-            random.seed(seed)
             a = random.randint(0, 100) % bin_count
             sublist.append(subframe.loc[a, "filenr"])
         display_filenrs.append(sublist)
@@ -192,10 +192,9 @@ def plot_across_mxm_schemes(
     if m != 5 and m != 9:
         print("value for m not supported")
         return
-    info_frame = all_info.iloc[
-        [k + N * N for k in range(int(all_info.shape[0] / (N * N)))], :
+    info_frame = all_info.loc[
+        [k * (N * N) for k in range(int(all_info.shape[0] / (N * N)))], ["filenr", "chi", "c12"]
     ]
-    info_frame = all_info.loc[:, ["filenr", "chi", "c12"]]
     display_filenrs = plot_across_schemes_prep(info_frame, seed)
     indices1 = all_info.loc[0 : N * N, "index1"]
     indices2 = all_info.loc[0 : N * N, "index2"]
