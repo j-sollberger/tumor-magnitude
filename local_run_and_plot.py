@@ -214,7 +214,7 @@ experiments_scores = [
         "magnitudes": True,
         "cellcounts": False,
         "distances": False,
-        "title": "Simple magnitudes",
+        "title": r"\textbf{Simple Magnitudes}",
     },
     {
         "active": True,  # cellcounts - not normalised
@@ -223,7 +223,7 @@ experiments_scores = [
         "magnitudes": False,
         "cellcounts": True,
         "distances": False,
-        "title": "Simple cell counts",
+        "title": r"\textbf{Simple Cell Counts}",
     },
     {
         "active": True,  # cellcounts + distances - normalised
@@ -232,7 +232,7 @@ experiments_scores = [
         "magnitudes": False,
         "cellcounts": True,
         "distances": True,
-        "title": "Cell counts + dist.; norm.",
+        "title": r"\textbf{Counts + Distances}",
     },
 ]
 
@@ -407,7 +407,7 @@ def run_experiment(
             colors=colors,
             N=N,
             std=True,
-            ylabel="magnitude" if magnitudes else "cellcount",
+            ylabel="Magnitude" if magnitudes else "Cellcount",
         )
 
     return
@@ -596,20 +596,23 @@ def run_cluster_quality_experiment(
 
     # plot all the scores
     fig, axes = plt.subplots(2, 1)
-    fig.set_figwidth(2.4)
-    fig.set_figheight(4)
+    fig.set_figwidth(0.33 * doc_textwidth)
+    fig.set_figheight(0.33 * 2 * doc_textwidth)
     ax = axes[0]
     ax.plot(numbers_signatures, y_s, "-")
     ax.set_title(title, pad=8)
-    ax.set_ylabel("Silhouette Score", fontsize=9)
+    if magnitudes:
+        ax.set_ylabel("Silhouette Score")
     ax.set_xticks(numbers_signatures)
-    ax.set_yticks([])
+    if not distances:
+        ax.set_yticks([])
     ax.set_ylim(0.58, 0.86)
     ax.yaxis.tick_right()
     ax = axes[1]
     ax.plot(numbers_signatures, y_e_i, "-")
-    ax.set_xlabel(r"number of clusters $k$", fontsize=9)
-    ax.set_ylabel("WCSS", fontsize=9)
+    ax.set_xlabel(r"Number of Clusters $k$")
+    if magnitudes:
+        ax.set_ylabel("WCSS")
     ax.set_xticks(numbers_signatures)
     ax.set_yticks([])
     plt.savefig(

@@ -225,7 +225,7 @@ def plot_classification_with_purities(
     label_map = {0: "Elimination", 1: "Equilibrium", 2: "Escape"}
 
     fig, (ax1, ax2) = plt.subplots(
-        1, 2, sharex=False, layout="constrained", figsize=(15 / 2.54, 7.5 / 2.54)
+        1, 2, layout="constrained", figsize=(0.98*doc_textwidth,0.49*doc_textwidth)
     )
 
     for c in np.unique(show_labels[:, 2]):
@@ -233,7 +233,7 @@ def plot_classification_with_purities(
         ax1.scatter(
             d[:, 0],
             d[:, 1],
-            s=135,
+            s=3*doc_textwidth**2,
             c=mapping[c][0],
             marker=mapping[c][1],
             label=label_map[c],
@@ -242,13 +242,12 @@ def plot_classification_with_purities(
         loc="center left",
         bbox_to_anchor=(1.005, 0.5),
         ncols=1,
-        labelspacing=1.5,
+        labelspacing=1,
         handlelength=1,
-        fontsize=8,
     )
-    ax1.set_box_aspect(1)  # makes it square
-    ax1.set_xlabel("$c_{1/2}$")
-    ax1.set_ylabel(r"$\chi_c^m$", rotation=0, labelpad=10)
+    ax1.set_box_aspect(1)
+    ax1.set_xlabel("$c_{1/2}$", ha = "center")
+    ax1.set_ylabel(r"$\chi_c^m$", rotation=0, labelpad=10, va = "center")
     ax1.xaxis.set_minor_locator(AutoMinorLocator(2))
     ax1.xaxis.set_major_locator(MultipleLocator(0.2, 0.1))
     ax1.yaxis.set_minor_locator(AutoMinorLocator(2))
@@ -260,15 +259,15 @@ def plot_classification_with_purities(
     im = ax2.scatter(
         show_purity[:, 0],
         show_purity[:, 1],
-        s=135,
+        s=3*doc_textwidth**2,
         c=show_purity[:, 2],
         marker="o",
         vmin=0,
         vmax=1,
     )
-    ax2.set_box_aspect(1)  # makes it square
-    ax2.set_xlabel("$c_{1/2}$")
-    ax2.set_ylabel(r"$\chi_c^m$", rotation=0, labelpad=10)
+    ax2.set_box_aspect(1)
+    ax2.set_xlabel("$c_{1/2}$", ha = "center")
+    ax2.set_ylabel(r"$\chi_c^m$", rotation=0, labelpad=10, va = "center")
     ax2.xaxis.set_minor_locator(AutoMinorLocator(2))
     ax2.xaxis.set_major_locator(MultipleLocator(0.2, 0.1))
     ax2.yaxis.set_minor_locator(AutoMinorLocator(2))
@@ -276,9 +275,9 @@ def plot_classification_with_purities(
     ax2.set_xmargin(0.07)
     ax2.set_ymargin(0.07)
     ax2.set_title("(b) Purities")
-    fig.colorbar(im, ax=ax2, shrink=0.65)
+    fig.colorbar(im, ax=ax2, shrink=0.52)
 
-    fig.suptitle(plot_title, y=0.95, fontsize=11)
+    fig.suptitle(plot_title, y=0.9)
 
     plt.savefig(
         os.path.join(result_directory, save_title), format="pdf", bbox_inches="tight"
@@ -306,9 +305,9 @@ def reduced_plot_classification_with_purities(
     mapping = {0: ("blue", "o"), 1: ("yellow", "o"), 2: ("red", "o"), 3: ("green", "o")}
     schemes = np.array(
         [
-            [Csf1, chi]
-            for chi in [0.5, 1, 1.5, 2, 2.5, 3, 3.5, 4, 4.5]
-            for Csf1 in [0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9]
+            [c12, chi]
+            for chi in [i / 2 for i in range(1, 10)]
+            for c12 in [i / 10 for i in range(1, 10)]
         ]
     ).T
 
@@ -316,10 +315,10 @@ def reduced_plot_classification_with_purities(
     show_labels = np.array([schemes[0], schemes[1], classification]).T
     show_purity = np.array([schemes[0], schemes[1], purities]).T
 
-    label_map = {0: "Elim.", 1: "Equi.", 2: "Esc."}
+    label_map = {0: "Elimination", 1: "Equilibrium", 2: "Escape"}
 
     fig, (ax1, ax2) = plt.subplots(
-        1, 2, sharex=False, layout="constrained", figsize=(2.4, 1.4)
+        1, 2, figsize=(0.53*doc_textwidth,0.265*doc_textwidth), gridspec_kw={'wspace':0.4}
     )
 
     for c in np.unique(show_labels[:, 2]):
@@ -327,33 +326,39 @@ def reduced_plot_classification_with_purities(
         ax1.scatter(
             d[:, 0],
             d[:, 1],
-            s=60,
+            s=doc_textwidth**2,
             c=mapping[c][0],
             marker=mapping[c][1],
             label=label_map[c],
         )
-    ax1.set_box_aspect(1)  # makes it square
+    ax1.set_box_aspect(1)
+    ax1.set_xlabel("$c_{1/2}$", labelpad = 2, ha = "center")
+    ax1.set_ylabel(r"$\chi_c^m$", rotation=0, labelpad=8, va = "center")
     ax1.set_xticks([])
     ax1.set_yticks([])
     ax1.set_xmargin(0.07)
     ax1.set_ymargin(0.07)
+    ax1.set_title("Classification", size = doc_fontsize-2, pad = 4)
 
     ax2.scatter(
         show_purity[:, 0],
         show_purity[:, 1],
-        s=60,
+        s=doc_textwidth**2,
         c=show_purity[:, 2],
         marker="o",
         vmin=0,
         vmax=1,
     )
-    ax2.set_box_aspect(1)  # makes it square
+    ax2.set_box_aspect(1)
+    ax2.set_xlabel("$c_{1/2}$", labelpad = 2, ha = "center")
+    ax2.set_ylabel(r"$\chi_c^m$", rotation=0, labelpad=8, va="center")
     ax2.set_xticks([])
     ax2.set_yticks([])
     ax2.set_xmargin(0.07)
     ax2.set_ymargin(0.07)
+    ax2.set_title("Purities", size = doc_fontsize-2, pad = 4)
 
-    fig.suptitle(plot_title, fontsize="x-small")  # y=0.95
+    fig.suptitle(plot_title, y=1.05)
 
     plt.savefig(
         os.path.join(result_directory, "reduced-" + save_title),

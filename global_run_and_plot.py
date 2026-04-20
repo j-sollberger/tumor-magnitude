@@ -13,9 +13,6 @@ RESULT_DIR = os.path.join(BASE_DIR, "Results/global")
 DATA_DIR = os.path.join(BASE_DIR, "Data/17082022_all2Params_t500")
 MAG_DIR = os.path.join(BASE_DIR, "Data/savedMagnitudes")
 
-# scale
-s = 0.15
-
 # ground truth from Bull & Byrne: 0 for Equilibrium, 1 for Elimination, 2 for Escape
 gt = [1,1,1,1,1,1,1,1,1,
       0,0,0,1,1,1,1,1,1,
@@ -46,8 +43,8 @@ experiments = (
             "scale": s,
             "combinations": [],
             "differences": comb,
-            "reduced": False,
-            "plot_title": f"Inclusion-Exclusion Type Differences at Scale {s}",
+            "plot_title": rf"\textbf{{Inclusion-Exclusion Differences at Scale {s}}}",
+            "plot_title_reduced": rf"\textbf{{Inclusion-Exclusion Differences}}",
             "save_title": f"all-incl-excl-s={s}.pdf",
         }
         for s in [0.35]
@@ -58,8 +55,8 @@ experiments = (
             "scale": s,
             "combinations": comb,
             "differences": [],
-            "reduced": False,
-            "plot_title": f"All Combinations at Scale {s}",
+            "plot_title": rf"\textbf{{All Combinations at Scale {s}}}",
+            "plot_title_reduced": rf"\textbf{{All Combinations}}",
             "save_title": f"all-comb-s={s}.pdf",
         }
         for s in [0.35]
@@ -70,8 +67,8 @@ experiments = (
             "scale": s,
             "combinations": comb,
             "differences": combgeq2,
-            "reduced": False,
-            "plot_title": f"All Combinations and Differences at Scale {s}",
+            "plot_title": rf"\textbf{{All Combinations and Differences at Scale {s}}}",
+            "plot_title_reduced": rf"\textbf{{All Combinations and Differences}}",
             "save_title": f"all-incl-excl-and-comb-s={s}.pdf",
         }
         for s in [0.35]
@@ -82,8 +79,8 @@ experiments = (
             "scale": s,
             "combinations": [[cell] for cell in cells],
             "differences": [],
-            "reduced": False,
-            "plot_title": f"Just Magnitudes at Scale {s}",
+            "plot_title": rf"\textbf{{Just Magnitudes at Scale {s}}}",
+            "plot_title_reduced": rf"\textbf{{Just Magnitudes}}",
             "save_title": f"just-magnitudes-s={s}.pdf",
         }
         for s in [0.35]
@@ -101,8 +98,8 @@ def run_experiment(
     scale: float,
     combinations: list,
     differences: list,
-    reduced: bool,
     plot_title: str,
+    plot_title_reduced: str,
     save_title: str,
 ) -> None:
     """Runs the experiment specified by inputs, i.e. it classifies the parameter schemes into 3 long-term outcomes according to certain magnitude features (combinations and/or inclusion-exclusion type differences), and it plots the results in the desired way (colors aligned with a certain ground truth).
@@ -115,8 +112,8 @@ def run_experiment(
         scale (float): scaling factor for magnitude
         combinations (list): celltype combinations whose magnitudes should be included in the feature vectors
         differences (list): celltype combinations for which the corresponding inclusion-exclusion type differences of magnitudes should be included in the feature vectors
-        reduced (bool): whether results should be plotted in reduced version
         plot_title (str): title of the resulting plot
+        plot_title_reduced (str): title of the resulting reduced plot
         save_title (str): under which name the plot should be saved
     """
 
@@ -142,14 +139,12 @@ def run_experiment(
         os.makedirs(result_directory)
 
     # visualize results
-    if reduced:
-        reduced_plot_classification_with_purities(
-            result_directory, classification, purities, plot_title, save_title
-        )
-    else:
-        plot_classification_with_purities(
-            result_directory, classification, purities, plot_title, save_title
-        )
+    plot_classification_with_purities(
+        result_directory, classification, purities, plot_title, save_title
+    )
+    reduced_plot_classification_with_purities(
+        result_directory, classification, purities, plot_title_reduced, save_title
+    )
 
     return
 
@@ -176,7 +171,7 @@ for experiment in experiments:
             scale=experiment["scale"],
             combinations=experiment["combinations"],
             differences=experiment["differences"],
-            reduced=experiment["reduced"],
             plot_title=experiment["plot_title"],
+            plot_title_reduced=experiment["plot_title_reduced"],
             save_title=experiment["save_title"],
         )
