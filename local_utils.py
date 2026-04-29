@@ -44,7 +44,7 @@ def prep_data(
     # create a data frame for all the information
     filenrs = collect_files(data_directory, range(1, 1621))
     paramdf = pd.read_csv(
-        os.path.join(data_directory, "parameter_info.csv"), index_col=0
+        os.path.join(os.path.dirname(data_directory), "params_2ParamSweep.csv"), index_col=1
     )
     bin_counts = pd.DataFrame(
         0, columns=[i / 10 for i in range(1, 10)], index=[i / 2 for i in range(1, 10)]
@@ -200,7 +200,7 @@ def plot_across_mxm_schemes(
     indices2 = all_info.loc[0 : N * N, "index2"]
     # plot them
     fig, axs = plt.subplots(
-        m, m, sharex=True, figsize = (doc_textwidth, doc_textwidth), gridspec_kw={'wspace':0.05,'hspace':0.05}
+        m, m, sharex=True, figsize = (doc_textwidth,doc_textwidth) if m == 9 else (0.48*doc_textwidth,0.48*doc_textwidth), gridspec_kw={'wspace':0.05,'hspace':0.05}
     )
     for i in range(9):
         for j in range(9):
@@ -226,7 +226,7 @@ def plot_across_mxm_schemes(
                 for c in range(n):
                     d = show_labels[show_labels[:, 2] == c]
                     ax.scatter(
-                        d[:, 0], d[:, 1], s= (doc_textwidth*N)**2 * 0.19 / (m**2), c=colors[c], marker="s"
+                        d[:, 0], d[:, 1], s= (doc_textwidth*N)**2 * 2.94*(m-2)/(1000*m), c=colors[c], marker="s"
                     )
 
     gs = axs[0, 0].get_gridspec()
@@ -263,11 +263,12 @@ def plot_across_schemes_display_sim_outcomes(
         os.makedirs(figure_directory)
 
     filenrs = collect_files(data_directory, range(1, 1621))
-    paramdf = pd.read_csv(os.path.join(data_directory, "parameter_info.csv"))
-    info_frame = paramdf.loc[paramdf["filenr"].isin(filenrs)]
+    paramdf = pd.read_csv(os.path.join(os.path.dirname(data_directory), "params_2ParamSweep.csv"))
+    info_frame = paramdf.loc[paramdf["ID"].isin(filenrs)]
     info_frame = info_frame.reset_index(drop=True)
     info_frame = info_frame.rename(
         columns={
+            "ID": "filenr",
             "chi_macrophageToCSF": "chi",
             "halfMaximalExtravasationCsf1Conc": "c12",
         }

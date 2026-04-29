@@ -19,6 +19,20 @@ LOC_MAG_DIR = os.path.join(BASE_DIR, "Data/savedLocalMagnitudes")
 ## set experiments ##
 experiments = [
     {
+        "active": True,  # just magnitudes - not normalised - 5 signatures
+        "scale": 0.35,
+        "num_signatures": 5,
+        "norm": False,
+        "magnitudes": True,
+        "cellcounts": False,
+        "distances": False,
+        "order": [0, 3, 1, 5, 4],
+        "plot_5x5": True,
+        "plot_9x9": True,
+        "plot_averages": True,
+        "plot_scores": True,
+    },
+    {
         "active": True,  # just magnitudes - not normalised - 6 signatures
         "scale": 0.35,
         "num_signatures": 6,

@@ -126,7 +126,7 @@ def return_classification(
     Args:
         vector (list): contains a vector for each simulation, these are clustered
         number_of_clusters (int): gives the k parameter in kmeans clustering
-        paramdf (pd.DataFrame): dataframe with columns 'filenr', 'chi_macrophageToCSF' and '	halfMaximalExtravasationCsf1Conc'
+        paramdf (pd.DataFrame): dataframe with columns 'ID', 'chi_macrophageToCSF' and '	halfMaximalExtravasationCsf1Conc'
 
     Returns:
         tuple: classification (list), labels (Series), diff_assigned (list), numb_of_sim (list)
@@ -174,7 +174,7 @@ def classify_schemes(vector: list, paramdf_reduced: pd.DataFrame, gt: list) -> t
 
     Args:
         vector (list): contains a vector for each simulation, these are clustered
-        paramdf (pd.DataFrame): dataframe with columns 'filenr', 'chi_macrophageToCSF' and '	halfMaximalExtravasationCsf1Conc'
+        paramdf (pd.DataFrame): dataframe with columns 'ID', 'chi_macrophageToCSF' and '	halfMaximalExtravasationCsf1Conc'
         gt (list): contains ground truth. That is, for every parameter scheme in lexicographic order a list like [0,0,-1] judging the match of the parameter scheme to elimination, equilibrium, escape (in that order). 1 means: clear good match (e.g. this scheme is clearly elimination), -1 means: clear bad match (e.g. this scheme is definitely not escape), 0 means: neither obviously good, nor bad (e.g. a good part of the simulations in this scheme could be assigned to equilibrium, but certainly not all of them)
 
     Returns:

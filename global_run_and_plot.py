@@ -107,7 +107,7 @@ def run_experiment(
     Args:
         magnitude_directory (str): where the precomputed magnitudes are stored
         result_directory (str): where the resulting plots should be saved to
-        paramdf_reduced (pd.DataFrame): dataframe with columns 'filenr', 'chi_macrophageToCSF', 'halfMaximalExtravasationCsf1Conc', and reduced to only those rows whose filenr exists in the data.
+        paramdf_reduced (pd.DataFrame): dataframe with columns 'ID', 'chi_macrophageToCSF', 'halfMaximalExtravasationCsf1Conc', and reduced to only those rows whose ID exists in the data.
         gt (list): ground truth for alignment of labels / colors
         scale (float): scaling factor for magnitude
         combinations (list): celltype combinations whose magnitudes should be included in the feature vectors
@@ -152,8 +152,8 @@ def run_experiment(
 ### run experiments ###
 
 filenrs = collect_files(DATA_DIR, range(1, 1621))
-paramdf = pd.read_csv(os.path.join(DATA_DIR, "parameter_info.csv"))
-paramdf_reduced = paramdf.loc[paramdf["filenr"].isin(filenrs)]
+paramdf = pd.read_csv(os.path.join(os.path.dirname(DATA_DIR), "params_2ParamSweep.csv"))
+paramdf_reduced = paramdf.loc[paramdf["ID"].isin(filenrs)]
 
 for experiment in experiments:
     if experiment["active"]:
