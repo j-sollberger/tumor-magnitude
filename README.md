@@ -7,7 +7,7 @@ We use magnitude based features to analyze synthetic data of the tumour microenv
 
 
 ### Data
-We use outputs from an agent based model that models the tumor microenvironment by Joshua A. Bull and Helen M. Byrne [[1]](#1). Specifically, we work with simulation outputs at a single late time point, obtained under variation of two parameters $\chi_c^m$ and $c_{1/2}$ that influence the behaviour of macrophages.
+We use outputs from an agent based model that models the tumor microenvironment by Joshua A. Bull and Helen M. Byrne [[1]](#1). Specifically, we work with simulation outputs at a single late time point, obtained under variation of two parameters $\chi_c^m$ and $c_{1/2}$ that influence the behaviour of macrophages. The data is available [here](https://github.com/JABull1066/MacrophageSensitivityABM/releases/tag/2-param-data).
 
 
 ## Code Structure
@@ -33,8 +33,13 @@ To reproduce results from the above preprint, use Python 3.12.2 and proceed as f
 ```
 pip install -r requirements.txt
 ```
-- Download the data TODO WHERE. If you wish to avoid lengthy computations, make sure to also download the precomputed global magnitudes TODO WHERE, and the precomputed local magnitudes, local cellcounts and pairwise distances TODO WHERE.
-- Make sure the relative data directories at the top of `local_run_and_plot.py` and `global_run_and_plot` are correct (DATA_DIR for the data, and LOC_MAG_DIR or MAG_DIR for local or global precomputed magnitudes) and set the directory for results as you wish (RESULT_DIR).
+- Download the data `all2Params_t500.zip` from the GitHub repository of [[1]](#1) [here](https://github.com/JABull1066/MacrophageSensitivityABM/releases/tag/2-param-data), along with the parameter information `params_2ParamSweep.csv`. Unzipping `all2Params_t500.zip` gives a folder named `17082022_all2Params_t500` that contains the individual simulation outcomes.
+- If you wish to avoid lengthy computations, make sure to also download the precomputed global magnitudes and/or the precomputed local magnitudes, local cellcounts and average pairwise distances [in this release](https://github.com/j-sollberger/tumor-magnitude/releases/tag/precomputed-magnitudes).
+- Make sure the relative data directories at the top of `local_run_and_plot.py` and `global_run_and_plot` are correct. That is:
+    -  DATA_DIR must point to the individual data files within `17082022_all2Params_t500` and the parameter information `params_2ParamSweep.csv` must sit in the same parent folder as `17082022_all2Params_t500`.
+    - Optionally: LOC_MAG_DIR and MAG_DIR must point to precomputed local and global magnitudes, respectively.
+
+    Set the directory for results as you wish (RESULT_DIR).
 - Run `local_run_and_plot.py` to reproduce all local results, and run `global_run_and_plot.py` to reproduce all global results.
 
 
