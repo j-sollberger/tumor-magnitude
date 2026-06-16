@@ -45,7 +45,7 @@ def give_vector_all_comb_magnitudes(
 def give_vector_magnitude_differences(
     magnitude_directory: str, scales: list, combs: list
 ) -> list:
-    """Gives the feature vector that consists of all possible magnitude inclusion-exclusion-type differences of cell-type combinations listed in comb and for all scaling factors listed in scales. Example: for the combination ['T','M','N'], the three differences |T,M|+|N|-|T,M,N|, |T,N|+|M|-|T,M,N| and |M,N|+|T|-|T,M,N| are entries of the feature vector for as many scales as are listed in the input. For single cell-types ['S'] in comb, simply its magnitude |S| is added to the feature vector (at all scales in scales).
+    """Gives the feature vector that consists of all possible magnitude inclusion-exclusion-type differences of cell-type combinations listed in comb and for all scaling factors listed in scales. Example: for the combination ['T','M','N'], the difference |T|+|M|+|N|-|T,M,N| is an entry of the feature vector for as many scales as are listed in the input. For single cell-types ['S'] in comb, simply its magnitude |S| is added to the feature vector (at all scales in scales).
 
     Args:
         magnitude_directory (str): where precomputed magnitudes are stored
@@ -67,21 +67,7 @@ def give_vector_magnitude_differences(
         vector = []
         for md in magnitudes:
             for t in combs:
-                vector = (
-                    vector
-                    + [
-                        md.loc[fileindex, ",".join([t[i] for i in subset])]
-                        + md.loc[
-                            fileindex,
-                            ",".join([t[i] for i in range(len(t)) if i not in subset]),
-                        ]
-                        - md.loc[fileindex, ",".join(t)]
-                        for k in range(1, len(t))
-                        for subset in combinations(range((len(t) + 1) // 2), k)
-                    ]
-                    if len(t) > 1
-                    else [md.loc[fileindex, t[0]]]
-                )
+                vector.append(sum([md.loc[fileindex,cell] for cell in t]) - md.loc[fileindex, ",".join(t)]) if len(t) > 1 else vector.append(md.loc[fileindex, t[0]])
         vectors.append(vector)
 
     return vectors

@@ -31,13 +31,24 @@ cells = ["T", "M", "N", "V"]
 comb = []
 for r in range(1, len(cells) + 1):
     comb.extend(list(a) for a in itertools.combinations(cells, r))
-combgeq2 = []
-for r in range(2, len(cells) + 1):
-    combgeq2.extend(list(a) for a in itertools.combinations(cells, r))
+combonly2 = []
+combonly2.extend(list(a) for a in itertools.combinations(cells, 2))
 
 # experiments
 experiments = (
     [
+        {
+            "active": True,  # only pairwise inclusion exclusion type differences
+            "scale": s,
+            "combinations": [],
+            "differences": combonly2,
+            "plot_title": rf"\textbf{{Only Pairwise Inclusion-Exclusion Differences at Scale {s}}}",
+            "plot_title_reduced": rf"\textbf{{Only Pairwise Inclusion-Exclusion Differences}}",
+            "save_title": f"pairwise-incl-excl-s={s}.pdf",
+        }
+        for s in [0.35]
+    ]
+    + [
         {
             "active": True,  # all inclusion exclusion type differences (including just magnitudes |T|, ...)
             "scale": s,
@@ -58,18 +69,6 @@ experiments = (
             "plot_title": rf"\textbf{{All Combinations at Scale {s}}}",
             "plot_title_reduced": rf"\textbf{{All Combinations}}",
             "save_title": f"all-comb-s={s}.pdf",
-        }
-        for s in [0.35]
-    ]
-    + [
-        {
-            "active": True,  # all inclusion exclusion type differences and magnitudes of all possible combinations
-            "scale": s,
-            "combinations": comb,
-            "differences": combgeq2,
-            "plot_title": rf"\textbf{{All Combinations and Differences at Scale {s}}}",
-            "plot_title_reduced": rf"\textbf{{All Combinations and Differences}}",
-            "save_title": f"all-incl-excl-and-comb-s={s}.pdf",
         }
         for s in [0.35]
     ]
