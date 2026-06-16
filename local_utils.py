@@ -44,7 +44,8 @@ def prep_data(
     # create a data frame for all the information
     filenrs = collect_files(data_directory, range(1, 1621))
     paramdf = pd.read_csv(
-        os.path.join(os.path.dirname(data_directory), "params_2ParamSweep.csv"), index_col=1
+        os.path.join(os.path.dirname(data_directory), "params_2ParamSweep.csv"),
+        index_col=1,
     )
     bin_counts = pd.DataFrame(
         0, columns=[i / 10 for i in range(1, 10)], index=[i / 2 for i in range(1, 10)]
@@ -83,7 +84,7 @@ def prep_data(
         if cellcounts:
             cd = read_local_cellcounts(local_magnitude_directory, N)
         if distances:
-            dd = read_local_average_pairwise_distances(local_magnitude_directory,N)
+            dd = read_local_average_pairwise_distances(local_magnitude_directory, N)
 
         # calculate all local magnitude incl.-excl. difference vectors + all combination magnitudes
         list_of_vectors = []
@@ -193,14 +194,23 @@ def plot_across_mxm_schemes(
         print("value for m not supported")
         return
     info_frame = all_info.loc[
-        [k * (N * N) for k in range(int(all_info.shape[0] / (N * N)))], ["filenr", "chi", "c12"]
+        [k * (N * N) for k in range(int(all_info.shape[0] / (N * N)))],
+        ["filenr", "chi", "c12"],
     ]
     display_filenrs = plot_across_schemes_prep(info_frame, seed)
     indices1 = all_info.loc[0 : N * N, "index1"]
     indices2 = all_info.loc[0 : N * N, "index2"]
     # plot them
     fig, axs = plt.subplots(
-        m, m, sharex=True, figsize = (doc_textwidth,doc_textwidth) if m == 9 else (0.48*doc_textwidth,0.48*doc_textwidth), gridspec_kw={'wspace':0.05,'hspace':0.05}
+        m,
+        m,
+        sharex=True,
+        figsize=(
+            (doc_textwidth, doc_textwidth)
+            if m == 9
+            else (0.48 * doc_textwidth, 0.48 * doc_textwidth)
+        ),
+        gridspec_kw={"wspace": 0.05, "hspace": 0.05},
     )
     for i in range(9):
         for j in range(9):
@@ -226,19 +236,25 @@ def plot_across_mxm_schemes(
                 for c in range(n):
                     d = show_labels[show_labels[:, 2] == c]
                     ax.scatter(
-                        d[:, 0], d[:, 1], s= (doc_textwidth*N)**2 * 2.94*(m-2)/(1000*m), c=colors[c], marker="s"
+                        d[:, 0],
+                        d[:, 1],
+                        s=(doc_textwidth * N) ** 2 * 2.94 * (m - 2) / (1000 * m),
+                        c=colors[c],
+                        marker="s",
                     )
 
     gs = axs[0, 0].get_gridspec()
-    ax_dummy = fig.add_subplot(gs[:,:], zorder = -1)
+    ax_dummy = fig.add_subplot(gs[:, :], zorder=-1)
     ax_dummy.tick_params(length=0)
-    ax_dummy.set_xticks(np.linspace(1/(2*m),1-1/(2*m),m))
-    ax_dummy.set_xticklabels([i/10 for i in range(1,10,8//(m-1))],size = 7)
-    ax_dummy.set_yticks(np.linspace(1/(2*m),1-1/(2*m),m))
-    ax_dummy.set_yticklabels([i/2 for i in range(1,10,8//(m-1))],size = 7)
+    ax_dummy.set_xticks(np.linspace(1 / (2 * m), 1 - 1 / (2 * m), m))
+    ax_dummy.set_xticklabels([i / 10 for i in range(1, 10, 8 // (m - 1))], size=7)
+    ax_dummy.set_yticks(np.linspace(1 / (2 * m), 1 - 1 / (2 * m), m))
+    ax_dummy.set_yticklabels([i / 2 for i in range(1, 10, 8 // (m - 1))], size=7)
     ax_dummy.spines[:].set_visible(False)
-    ax_dummy.set_xlabel(r"$c_{1/2}$", labelpad=8, ha = "center", va = "center")
-    ax_dummy.set_ylabel(r"$\chi_c^m$", rotation = 0, labelpad=10, ha = "center", va = "center")
+    ax_dummy.set_xlabel(r"$c_{1/2}$", labelpad=8, ha="center", va="center")
+    ax_dummy.set_ylabel(
+        r"$\chi_c^m$", rotation=0, labelpad=10, ha="center", va="center"
+    )
 
     plt.savefig(
         os.path.join(result_directory, result_name), format="pdf", bbox_inches="tight"
@@ -263,7 +279,9 @@ def plot_across_schemes_display_sim_outcomes(
         os.makedirs(figure_directory)
 
     filenrs = collect_files(data_directory, range(1, 1621))
-    paramdf = pd.read_csv(os.path.join(os.path.dirname(data_directory), "params_2ParamSweep.csv"))
+    paramdf = pd.read_csv(
+        os.path.join(os.path.dirname(data_directory), "params_2ParamSweep.csv")
+    )
     info_frame = paramdf.loc[paramdf["ID"].isin(filenrs)]
     info_frame = info_frame.reset_index(drop=True)
     info_frame = info_frame.rename(
@@ -274,7 +292,13 @@ def plot_across_schemes_display_sim_outcomes(
         }
     )
     display_filenrs = plot_across_schemes_prep(info_frame, seed)
-    fig, axs = plt.subplots(9, 9, sharex=True, figsize = (doc_textwidth, doc_textwidth), gridspec_kw={'wspace':0.05,'hspace':0.05})
+    fig, axs = plt.subplots(
+        9,
+        9,
+        sharex=True,
+        figsize=(doc_textwidth, doc_textwidth),
+        gridspec_kw={"wspace": 0.05, "hspace": 0.05},
+    )
     for i in range(9):
         for j in range(9):
             data = pd.read_csv(
@@ -295,39 +319,42 @@ def plot_across_schemes_display_sim_outcomes(
                 ax.scatter(
                     data.loc[mask, "points_x"],
                     data.loc[mask, "points_y"],
-                    facecolors = data.loc[mask, "celltypes"].map(cellcolor_map),
+                    facecolors=data.loc[mask, "celltypes"].map(cellcolor_map),
                     label=label,
                     marker="o" if label != "Vessel" else "x",
                     s=0.25 if label != "Vessel" else 1,
-                    edgecolors = 'none' if label != "Vessel" else None,
-                    linewidths = 0.5 if label == "Vessel" else None
+                    edgecolors="none" if label != "Vessel" else None,
+                    linewidths=0.5 if label == "Vessel" else None,
                 )
 
     handles = axs[8, 1].get_legend_handles_labels()[0]
-    fakehandle = Line2D([], [], linestyle='none')
+    fakehandle = Line2D([], [], linestyle="none")
     legend = fig.legend(
         [fakehandle] + handles,
         ["Cell Types: "] + list(cellcolor_map.keys()),
         loc="upper center",
         ncols=5,
         bbox_to_anchor=(0.5, 0.94),
-        handlelength=0.1, borderpad=0.5,
-        frameon = False
+        handlelength=0.1,
+        borderpad=0.5,
+        frameon=False,
     )
     for legobj in legend.legend_handles[1:5]:
         legobj.set_sizes([20])
     legend.legend_handles[1].set_linewidth([2])
 
     gs = axs[0, 0].get_gridspec()
-    ax_dummy = fig.add_subplot(gs[:,:], zorder = -1)
+    ax_dummy = fig.add_subplot(gs[:, :], zorder=-1)
     ax_dummy.tick_params(length=0)
-    ax_dummy.set_xticks(np.linspace(1/18,17/18,9))
-    ax_dummy.set_xticklabels([i/10 for i in range(1,10)],size = 7)
-    ax_dummy.set_yticks(np.linspace(1/18,17/18,9))
-    ax_dummy.set_yticklabels([i/2 for i in range(1,10)],size = 7)
+    ax_dummy.set_xticks(np.linspace(1 / 18, 17 / 18, 9))
+    ax_dummy.set_xticklabels([i / 10 for i in range(1, 10)], size=7)
+    ax_dummy.set_yticks(np.linspace(1 / 18, 17 / 18, 9))
+    ax_dummy.set_yticklabels([i / 2 for i in range(1, 10)], size=7)
     ax_dummy.spines[:].set_visible(False)
-    ax_dummy.set_xlabel(r"$c_{1/2}$", labelpad=8, ha = "center", va = "center")
-    ax_dummy.set_ylabel(r"$\chi_c^m$", rotation = 0, labelpad=10, ha = "center", va = "center")
+    ax_dummy.set_xlabel(r"$c_{1/2}$", labelpad=8, ha="center", va="center")
+    ax_dummy.set_ylabel(
+        r"$\chi_c^m$", rotation=0, labelpad=10, ha="center", va="center"
+    )
 
     plt.savefig(
         os.path.join(figure_directory, file_name), format="pdf", bbox_inches="tight"
@@ -413,7 +440,9 @@ def plot_averages_representatives(
     width = 0.25
     multiplier = 0
 
-    fig = plt.figure(constrained_layout=True, figsize=(doc_textwidth,doc_textwidth*1.05))
+    fig = plt.figure(
+        constrained_layout=True, figsize=(doc_textwidth, doc_textwidth * 1.05)
+    )
     gs = GridSpec(7, number_of_signatures, figure=fig)
     ax = fig.add_subplot(gs[0:4, :])
 
@@ -429,7 +458,13 @@ def plot_averages_representatives(
         )
         if std:
             ax.errorbar(
-                x=x + offset, y=measurement[0], yerr=measurement[1], fmt="none", color="r",elinewidth=1,capsize=2
+                x=x + offset,
+                y=measurement[0],
+                yerr=measurement[1],
+                fmt="none",
+                color="r",
+                elinewidth=1,
+                capsize=2,
             )
         else:
             ax.bar_label(
@@ -442,10 +477,10 @@ def plot_averages_representatives(
     ax.set_ylabel(ylabel)
     ax.set_title(rf"\textbf{{Average  {ylabel}s by Local Neighbourhood Class}}")
     ax.set_xticks(x + width, [r"$\bullet$"] * number_of_signatures)
-    ax.tick_params(axis='x', pad=0)
+    ax.tick_params(axis="x", pad=0)
     for i in range(number_of_signatures):
         label = ax.get_xticklabels()[i]
-        label.set_fontsize(doc_fontsize*2.5)
+        label.set_fontsize(doc_fontsize * 2.5)
         label.set_color(colors[perm.index(i)])
     ax.legend(loc="upper left", ncols=3)
 
@@ -482,7 +517,9 @@ def plot_averages_representatives(
             (x0, y0), math.sqrt(2) * 25 / float(N), color="white", fill=True, zorder=0
         )
         ax.add_patch(circle)
-        ax.set_xlabel(r"$\bullet$", color=colors[k], fontsize=doc_fontsize*2.5,labelpad=0)
+        ax.set_xlabel(
+            r"$\bullet$", color=colors[k], fontsize=doc_fontsize * 2.5, labelpad=0
+        )
         ax = fig.add_subplot(gs[5, perm[k]])
         for label in cellcolor_map:
             ax.set_xticks([])
@@ -512,11 +549,11 @@ def plot_averages_representatives(
             )
             ax.add_patch(circle)
 
-    ax_group = fig.add_subplot(gs[5:7,:])
+    ax_group = fig.add_subplot(gs[5:7, :])
     ax_group.axis("off")
     ax_group.set_title(r"\textbf{Typical Representatives}")
 
-    ax_group = fig.add_subplot(gs[4,:])
+    ax_group = fig.add_subplot(gs[4, :])
     ax_group.axis("off")
 
     ax = fig.add_subplot(gs[6, :])

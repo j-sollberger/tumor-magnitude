@@ -67,7 +67,14 @@ def give_vector_magnitude_differences(
         vector = []
         for md in magnitudes:
             for t in combs:
-                vector.append(sum([md.loc[fileindex,cell] for cell in t]) - md.loc[fileindex, ",".join(t)]) if len(t) > 1 else vector.append(md.loc[fileindex, t[0]])
+                (
+                    vector.append(
+                        sum([md.loc[fileindex, cell] for cell in t])
+                        - md.loc[fileindex, ",".join(t)]
+                    )
+                    if len(t) > 1
+                    else vector.append(md.loc[fileindex, t[0]])
+                )
         vectors.append(vector)
 
     return vectors
@@ -211,7 +218,7 @@ def plot_classification_with_purities(
     label_map = {0: "Elimination", 1: "Equilibrium", 2: "Escape"}
 
     fig, (ax1, ax2) = plt.subplots(
-        1, 2, layout="constrained", figsize=(0.98*doc_textwidth,0.49*doc_textwidth)
+        1, 2, layout="constrained", figsize=(0.98 * doc_textwidth, 0.49 * doc_textwidth)
     )
 
     for c in np.unique(show_labels[:, 2]):
@@ -219,7 +226,7 @@ def plot_classification_with_purities(
         ax1.scatter(
             d[:, 0],
             d[:, 1],
-            s=3*doc_textwidth**2,
+            s=3 * doc_textwidth**2,
             c=mapping[c][0],
             marker=mapping[c][1],
             label=label_map[c],
@@ -232,8 +239,8 @@ def plot_classification_with_purities(
         handlelength=1,
     )
     ax1.set_box_aspect(1)
-    ax1.set_xlabel("$c_{1/2}$", ha = "center")
-    ax1.set_ylabel(r"$\chi_c^m$", rotation=0, labelpad=10, va = "center")
+    ax1.set_xlabel("$c_{1/2}$", ha="center")
+    ax1.set_ylabel(r"$\chi_c^m$", rotation=0, labelpad=10, va="center")
     ax1.xaxis.set_minor_locator(AutoMinorLocator(2))
     ax1.xaxis.set_major_locator(MultipleLocator(0.2, 0.1))
     ax1.yaxis.set_minor_locator(AutoMinorLocator(2))
@@ -245,15 +252,15 @@ def plot_classification_with_purities(
     im = ax2.scatter(
         show_purity[:, 0],
         show_purity[:, 1],
-        s=3*doc_textwidth**2,
+        s=3 * doc_textwidth**2,
         c=show_purity[:, 2],
         marker="o",
         vmin=0,
         vmax=1,
     )
     ax2.set_box_aspect(1)
-    ax2.set_xlabel("$c_{1/2}$", ha = "center")
-    ax2.set_ylabel(r"$\chi_c^m$", rotation=0, labelpad=10, va = "center")
+    ax2.set_xlabel("$c_{1/2}$", ha="center")
+    ax2.set_ylabel(r"$\chi_c^m$", rotation=0, labelpad=10, va="center")
     ax2.xaxis.set_minor_locator(AutoMinorLocator(2))
     ax2.xaxis.set_major_locator(MultipleLocator(0.2, 0.1))
     ax2.yaxis.set_minor_locator(AutoMinorLocator(2))
@@ -304,7 +311,10 @@ def reduced_plot_classification_with_purities(
     label_map = {0: "Elimination", 1: "Equilibrium", 2: "Escape"}
 
     fig, (ax1, ax2) = plt.subplots(
-        1, 2, figsize=(0.53*doc_textwidth,0.265*doc_textwidth), gridspec_kw={'wspace':0.4}
+        1,
+        2,
+        figsize=(0.53 * doc_textwidth, 0.265 * doc_textwidth),
+        gridspec_kw={"wspace": 0.4},
     )
 
     for c in np.unique(show_labels[:, 2]):
@@ -318,13 +328,13 @@ def reduced_plot_classification_with_purities(
             label=label_map[c],
         )
     ax1.set_box_aspect(1)
-    ax1.set_xlabel("$c_{1/2}$", labelpad = 2, ha = "center")
-    ax1.set_ylabel(r"$\chi_c^m$", rotation=0, labelpad=8, va = "center")
+    ax1.set_xlabel("$c_{1/2}$", labelpad=2, ha="center")
+    ax1.set_ylabel(r"$\chi_c^m$", rotation=0, labelpad=8, va="center")
     ax1.set_xticks([])
     ax1.set_yticks([])
     ax1.set_xmargin(0.07)
     ax1.set_ymargin(0.07)
-    ax1.set_title("Classification", size = doc_fontsize-2, pad = 4)
+    ax1.set_title("Classification", size=doc_fontsize - 2, pad=4)
 
     ax2.scatter(
         show_purity[:, 0],
@@ -336,13 +346,13 @@ def reduced_plot_classification_with_purities(
         vmax=1,
     )
     ax2.set_box_aspect(1)
-    ax2.set_xlabel("$c_{1/2}$", labelpad = 2, ha = "center")
+    ax2.set_xlabel("$c_{1/2}$", labelpad=2, ha="center")
     ax2.set_ylabel(r"$\chi_c^m$", rotation=0, labelpad=8, va="center")
     ax2.set_xticks([])
     ax2.set_yticks([])
     ax2.set_xmargin(0.07)
     ax2.set_ymargin(0.07)
-    ax2.set_title("Purities", size = doc_fontsize-2, pad = 4)
+    ax2.set_title("Purities", size=doc_fontsize - 2, pad=4)
 
     fig.suptitle(plot_title, y=1.05)
 

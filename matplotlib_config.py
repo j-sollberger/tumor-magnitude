@@ -2,7 +2,7 @@ import matplotlib.pyplot as plt
 from matplotlib.ticker import AutoMinorLocator, MultipleLocator
 from mpl_toolkits.axes_grid1 import make_axes_locatable
 
-doc_textwidth = 5.126 #inches
+doc_textwidth = 5.126  # inches
 doc_fontsize = 10
 
 
@@ -37,9 +37,9 @@ params = {
     "axes.titlesize": doc_fontsize,
     "figure.titlesize": doc_fontsize,
     "font.family": "lmodern",
-    "xtick.labelsize": doc_fontsize-2,
-    "ytick.labelsize": doc_fontsize-2,
-    "legend.fontsize": doc_fontsize-2,
+    "xtick.labelsize": doc_fontsize - 2,
+    "ytick.labelsize": doc_fontsize - 2,
+    "legend.fontsize": doc_fontsize - 2,
     "legend.borderpad": 0.6,
 }
 

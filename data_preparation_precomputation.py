@@ -409,7 +409,14 @@ def read_distances(saved_distances_directory: str, filenr: int) -> list:
 
     return A
 
-def save_local_average_pairwise_distances(data_directory: str, saved_distances_directory: str, saved_average_distances_directory: str, N: int, filenrs: list) -> None:
+
+def save_local_average_pairwise_distances(
+    data_directory: str,
+    saved_distances_directory: str,
+    saved_average_distances_directory: str,
+    N: int,
+    filenrs: list,
+) -> None:
     """Saves local average pairwise distances across all simulation outcomes to a pickle file. Here for a given number of NxN checkpoints (and minimal closed disks that cover the entire domain). The local average distances are saved to a pickle file 'localAvrDistances_N={N}' in the format of a pandas dataframe, with rows corresponding to simulation outcomes, and columns labeled in the format of '1,2,M,N' – with a single listed cell type corresponding to pairwise distances within this cell type, and a pair of two cell types corresponding to pairwise distances between these two cell types.
 
     Args:
@@ -420,8 +427,10 @@ def save_local_average_pairwise_distances(data_directory: str, saved_distances_d
         filenrs (list): list of filenrs for whose corresponding local average distances should be saved
     """
 
-    if not os.path.exists(os.path.join(saved_distances_directory,f"distances_filenr{filenr}")):
-        save_distances(data_directory,saved_distances_directory,filenrs)
+    if not os.path.exists(
+        os.path.join(saved_distances_directory, f"distances_filenr{filenr}")
+    ):
+        save_distances(data_directory, saved_distances_directory, filenrs)
 
     cells = ["Tumour", "Macrophage", "Necrotic"]
     power_set = []
@@ -448,9 +457,7 @@ def save_local_average_pairwise_distances(data_directory: str, saved_distances_d
             ),
             index_col=0,
         )
-        data = data.loc[
-            data["celltypes"].isin(["Tumour", "Macrophage", "Necrotic"])
-        ]
+        data = data.loc[data["celltypes"].isin(["Tumour", "Macrophage", "Necrotic"])]
         data = data.reset_index(drop=True)
         row = []
         for x in xy:
@@ -535,14 +542,18 @@ def save_local_average_pairwise_distances(data_directory: str, saved_distances_d
 
     # dump into pickle file
     file = open(
-        os.path.join(saved_average_distances_directory, f"localAvrDistances_N={N}"), "wb"
+        os.path.join(saved_average_distances_directory, f"localAvrDistances_N={N}"),
+        "wb",
     )
     pickle.dump(frame, file)
     file.close()
 
     return
 
-def read_local_average_pairwise_distances(saved_average_distances_directory: str, N: int) -> pd.DataFrame:
+
+def read_local_average_pairwise_distances(
+    saved_average_distances_directory: str, N: int
+) -> pd.DataFrame:
     """Reads the saved local average pairwise distances per cell type from the corresponding pickle file with name 'localAvrDistances_N={N}'.
 
     Args:
@@ -554,7 +565,8 @@ def read_local_average_pairwise_distances(saved_average_distances_directory: str
     """
 
     file = open(
-        os.path.join(saved_average_distances_directory, f"localAvrDistances_N={N}"), "rb"
+        os.path.join(saved_average_distances_directory, f"localAvrDistances_N={N}"),
+        "rb",
     )
     newframe = pickle.load(file)
     file.close()

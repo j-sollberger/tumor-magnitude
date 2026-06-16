@@ -312,11 +312,11 @@ def run_experiment(
     if not os.path.exists(result_directory):
         os.makedirs(result_directory)
 
-    if os.path.exists(os.path.join(
-        result_directory, f"all_info_{num_signatures}signatures"
-    )) and os.path.exists(os.path.join(result_directory, "vectors")):
-        picklefile = open(os.path.join(
-            result_directory, f"all_info_{num_signatures}signatures"), "rb"
+    if os.path.exists(
+        os.path.join(result_directory, f"all_info_{num_signatures}signatures")
+    ) and os.path.exists(os.path.join(result_directory, "vectors")):
+        picklefile = open(
+            os.path.join(result_directory, f"all_info_{num_signatures}signatures"), "rb"
         )
         all_info = pickle.load(picklefile)
         picklefile.close()
@@ -350,7 +350,10 @@ def run_experiment(
             all_info["label"] = labels
 
             # store data
-            file = open(os.path.join(result_directory, f"all_info_{num_signatures}signatures"), "wb")
+            file = open(
+                os.path.join(result_directory, f"all_info_{num_signatures}signatures"),
+                "wb",
+            )
             pickle.dump(all_info, file)
             file.close()
 
@@ -383,7 +386,10 @@ def run_experiment(
             all_info["label"] = labels
 
             # store data
-            file = open(os.path.join(result_directory, f"all_info_{num_signatures}signatures"), "wb")
+            file = open(
+                os.path.join(result_directory, f"all_info_{num_signatures}signatures"),
+                "wb",
+            )
             pickle.dump(all_info, file)
             file.close()
             file = open(os.path.join(result_directory, "vectors"), "wb")
@@ -493,14 +499,19 @@ def run_cluster_quality_experiment(
             or num_signatures not in inertias.keys()
         ):
             if (
-                os.path.exists(os.path.join(
-                    result_directory, f"all_info_{num_signatures}signatures"
-                ))
+                os.path.exists(
+                    os.path.join(
+                        result_directory, f"all_info_{num_signatures}signatures"
+                    )
+                )
                 and os.path.exists(os.path.join(result_directory, "vectors"))
                 and num_signatures in inertias.keys()
             ):
-                picklefile = open(os.path.join(
-                    result_directory, f"all_info_{num_signatures}signatures"), "rb"
+                picklefile = open(
+                    os.path.join(
+                        result_directory, f"all_info_{num_signatures}signatures"
+                    ),
+                    "rb",
                 )
                 all_info = pickle.load(picklefile)
                 picklefile.close()
@@ -537,8 +548,11 @@ def run_cluster_quality_experiment(
                     all_info["label"] = labels
 
                     # store data
-                    file = open(os.path.join(
-                        result_directory, f"all_info_{num_signatures}signatures"), "wb"
+                    file = open(
+                        os.path.join(
+                            result_directory, f"all_info_{num_signatures}signatures"
+                        ),
+                        "wb",
                     )
                     pickle.dump(all_info, file)
                     file.close()
@@ -572,8 +586,11 @@ def run_cluster_quality_experiment(
                     all_info["label"] = labels
 
                     # store data
-                    file = open(os.path.join(
-                        result_directory, f"all_info_{num_signatures}signatures"), "wb"
+                    file = open(
+                        os.path.join(
+                            result_directory, f"all_info_{num_signatures}signatures"
+                        ),
+                        "wb",
                     )
                     pickle.dump(all_info, file)
                     file.close()
@@ -636,7 +653,7 @@ def run_cluster_quality_experiment(
             + str(numbers_signatures[0])
             + "-"
             + str(numbers_signatures[-1])
-            + ".pdf"
+            + ".pdf",
         ),
         format="pdf",
         bbox_inches="tight",
@@ -671,9 +688,11 @@ for item in tqdm([exp for exp in experiments if exp["active"]]):
             DATA_DIR, LOC_MAG_DIR, collect_files(DATA_DIR, range(1, 1621)), N
         )
     if item["distances"] and not os.path.exists(
-            os.path.join(LOC_MAG_DIR, f"localAvrDistances_N={N}")
-        ):
-            save_local_average_pairwise_distances(DATA_DIR, LOC_MAG_DIR, LOC_MAG_DIR, collect_files(DATA_DIR,range(1,1621)))
+        os.path.join(LOC_MAG_DIR, f"localAvrDistances_N={N}")
+    ):
+        save_local_average_pairwise_distances(
+            DATA_DIR, LOC_MAG_DIR, LOC_MAG_DIR, collect_files(DATA_DIR, range(1, 1621))
+        )
 
     # run experiment
     run_experiment(
@@ -713,9 +732,11 @@ for item in tqdm([exp for exp in experiments_scores if exp["active"]]):
             DATA_DIR, LOC_MAG_DIR, collect_files(DATA_DIR, range(1, 1621)), N
         )
     if item["distances"] and not os.path.exists(
-            os.path.join(LOC_MAG_DIR, f"localAvrDistances_N={N}")
-        ):
-            save_local_average_pairwise_distances(DATA_DIR, LOC_MAG_DIR, LOC_MAG_DIR, collect_files(DATA_DIR,range(1,1621)))
+        os.path.join(LOC_MAG_DIR, f"localAvrDistances_N={N}")
+    ):
+        save_local_average_pairwise_distances(
+            DATA_DIR, LOC_MAG_DIR, LOC_MAG_DIR, collect_files(DATA_DIR, range(1, 1621))
+        )
 
     # plot for cluster assessment
     run_cluster_quality_experiment(
