@@ -1,5 +1,5 @@
 # Magnitude-based features for multispecies data
-This repository contains the code used in the preprint TODO.
+This repository contains code used in the preprint https://arxiv.org/abs/2606.11775 (only the code used on the synthetic data).
 
 
 ### Description
@@ -25,6 +25,7 @@ We use outputs from an agent based model that models the tumor microenvironment 
 - `global_utils.py` contains alone functions used in the global application. In particular, `give_vector_all_comb_magnitudes` and `give_vector_magnitude_differences` are used to compute feature vectors, `align_labels`, `return_classification` and `classify_schemes` are used to classify parameter schemes and align the labels with a given ground truth, and the remaining functions are used for plotting results.
 - `global_run_and_plot.py` runs the global experiments specified at the top. That is, using its function `run_experiment`, it classifies parameter schemes into three long term tumour outcomes, using the specified magnitude features, and it plots the resulting classification together with purities.
 - `global_extras.py` contains extra code connected to the global application that is not used to produce results relevant for the above preprint but that could be useful for further work.
+- `morans_i.py` contains code used to benchmark pairwise inclusion-exclusion magnitude features with Moran's I features in the global application (in the appendix of the preprint).
 
 
 ## Reproduction of Results
@@ -40,7 +41,7 @@ pip install -r requirements.txt
     - Optionally: LOC_MAG_DIR and MAG_DIR must point to precomputed local and global magnitudes, respectively.
 
     Set the directory for results as you wish (RESULT_DIR).
-- Run `local_run_and_plot.py` to reproduce all local results, and run `global_run_and_plot.py` to reproduce all global results.
+- Run `local_run_and_plot.py` to reproduce all local results, and run `global_run_and_plot.py` to reproduce all global results. Run `morans_i.py` to reproduce the comparison with Moran's I features (in the appendix of the preprint).
 
 
 # References
